@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Guessr/ Guess It</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@1,600&display=swap" rel="stylesheet">
+    <style>
+      body {
+        background-image: url(bg.jpg);
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+    .container {
+      font-family: 'M PLUS 1p', sans-serif;
+      position: absolute;
+      top: 2px;
+      text-align: center;
+      color: #04a4df;
+      text-shadow: 8px 8px rgb(34, 34, 24);
+      font-size: 3.0rem;
+      }
+      
+      #start-button {
+        width: 200px;
+        height: 50px;
+        font-size: 20px;
+        background-color: #00bbff;
+        color: rgb(0, 0, 0);
+        border: 4px solid rgb(0, 0, 0);
+        border-radius: 10px;
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+        font-weight: bolder;
+        font-style: italic;
+      }
+      
+      #start-button:hover {
+        background-color: #000000;
+        color: whitesmoke;
+        border: 3px solid whitesmoke;
+        box-shadow: 2px 2px whitesmoke;
+        
+      }
+      .ins{
+      position: absolute;
+      bottom: 10px;
+      left: 1%;
+      z-index: 2;
+      background-color: #000000;
+      color: azure;
+      padding: 5px;
+      border: 2px solid rgb(255, 235, 235);
+      line-height: 30px;
+      padding-left: 10px;
+      width: 30%;
+      height: 50%;
+      border-radius: 5px;
+      font-size: 18px;
+      font-family: 'Source Sans Pro', sans-serif;
+    }
+    .ins h2{
+      text-align: center;
+      font-size: 1.5rem
+    }
+    footer{
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      color: white;
+    }
+      </style>
+</head>
+<body>
+  
+    <div class="container">
+        <h1>Country Guessr</h1>
+      </div>
+      
+      <!-- Start button -->
+      <button id="start-button">Start Game</button>
+      <div class="ins">
+        <h2>How To Play</h2>
+        <p><ul>
+          <li>Press "Start Game" to be redirected to the game.</li>
+          <li>Once in the game, click on "Start/Guess". An alert will appear providing you with clues about the location.</li>
+          <li>Read the clues, close the alert, and use street view for additional information about the location.</li>
+          <li>When you have an idea about the country, press "Start/Guess" again and enter your answer.</li>
+          <li>If your guess is correct, your score will automatically increase.</li>
+          <li>Repeat the process for new locations. </li>
+        </ul></p>
+      </div>
+<script>
+    document.getElementById("start-button").addEventListener("click", function() {
+  window.location.href = "Game.html";
+});
+
+</script>
+<footer>
+  Designed By Akshat
+</footer>
+</body>
+</html>
