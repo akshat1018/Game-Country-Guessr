@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Street View/Country Guessr</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  <style type="text/css">
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #start {
+      margin-top: 80px;
+      width: 160px;
+      height: 40px;
+      font-size: 20px;
+      background-color: #00bbff;
+      color: rgb(0, 0, 0);
+      border: 4px solid rgb(0, 0, 0);
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bolder;
+      font-style: italic;
+    }
+
+    #start:hover {
+      cursor: pointer;
+      background-color: #000000;
+      color: whitesmoke;
+      border: 3px solid whitesmoke;
+      box-shadow: 2px 2px whitesmoke;
+    }
+
+    img {
+      padding-top: 10px;
+    }
+
+    #street-view {
+      height: 100%;
+      /* Google inverts the colours if you don't have any billing set up.
+        We can go around this by adding a counter invert filter on top of the street view */
+      filter: invert(1);
+    }
+
+    #floating-panel {
+      position: absolute;
+      top: 10px;
+      left: 5%;
+      z-index: 2;
+      background-color: #00bbff;
+      padding: 5px;
+      border: 2px solid rgb(255, 235, 235);
+      text-align: center;
+      font-family: "Roboto", "sans-serif";
+      line-height: 30px;
+      padding-left: 10px;
+      width: 20%;
+      height: 38%;
+      border-radius: 5px;
+    }
+
+    #floating-panel {
+      margin-left: -100px;
+
+    }
+
+    #score {
+      background-color: #ffffff;
+      color: rgb(0, 0, 0);
+      border: 3px solid rgb(0, 0, 0);
+
+    }
+
+    #right {
+      position: absolute;
+      top: 10px;
+      right: 0%;
+      z-index: 2;
+      background-color: #00bbff;
+      padding: 5px;
+      border: 2px solid rgb(255, 235, 235);
+      text-align: center;
+      font-family: "Roboto", "sans-serif";
+      line-height: 25px;
+      padding-left: 10px;
+      width: 20%;
+      height: 38%;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    #close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: black;
+      color: whitesmoke;
+    }
+    #close:hover{
+      cursor: pointer;
+    }
+    footer{
+      position: absolute;
+      bottom: 4%;
+      left: 2px;
+      color: rgb(0, 0, 0);
+    }
+  </style>
+  <script>
+    // Set the starting score of the player to 0
+    let score = 0
+
+    let panorama
+
+    // Set different places where the player will be spawned
+    var places = [
+      [{ lat: 59.908616824194425, lng: 10.64145456937023 }, { country: 'Norway', clue: 'Country which is largest producer of clean Energy/Nordic Country' }],
+      [{ lat: 37.982906891454995, lng: 23.733157292160456 }, { country: 'Greece', clue: 'Country with Most DEPRESSED people i.e. 5.1% /South Est Europe ' }],
+      [{ lat: 4.687530965437685, lng: -74.05923809306759 }, { country: 'Colombia', clue: 'Country which has one of the highest crime rate i.e. 35.71%/South America' }],
+      [{ lat: 52.51641772658812, lng: 13.378177721682752 }, { country: 'Germany', clue: 'Country with most homeless people in Europe ' }], 
+      [{ lat: 27.39878959710502, lng: 89.90217262671723 }, { country: 'Bhutan', clue: 'Country with Negative Carbon Emission/ India Neighbour' }], 
+      [{ lat:48.79421530974887, lng: 2.348994434094658 }, { country: 'France', clue: 'Most Cancer Patients are from this Country WorldWide / Europe' }], 
+      [{ lat: 60.18685376520922, lng: 24.953216716835424 },  {country: 'Finland', clue: 'Happiest Country in World/ Nordic Country'}], 
+      [{ lat: 35.77673241788526, lng: 51.375256492790506 }, {country: 'Iran', clue: 'Country with the Worst Drug Problems/ Middle Eastern'}],
+      [{ lat: 28.65698215253449, lng: 77.2187357705682 }, {country: 'India', clue: 'Country with highest population acc. to 2023 data/ Asian'}], 
+      [{ lat: 25.300616041921234, lng: 51.51889269689979}, {country: 'Qatar', clue: 'Country with highest GDP per capita/ Football WC'}],
+      [{ lat: 40.7131015490098, lng: -74.0007554674568}, {country: 'USA', clue: 'Countries with the largest number of prisoners/ Biggest GDP'}],
+    ]
+
+    let currentPlace = places[Math.floor(Math.random() * (places.length))]  // Pick a random place to be spawned
+    let coordinates = currentPlace[0] // Get coordinates
+    let country = currentPlace[1].country // Get the name of the country
+
+    // Reload game environment when a round is over
+    let reconfigure = () => {
+      document.getElementById("score").innerHTML = "Your current score is: " + score
+      currentPlace = places[Math.floor(Math.random() * (places.length))]
+      coordinates = currentPlace[0]
+      country = currentPlace[1].country
+
+      initialize()
+    }
+
+    // Check if guess is correct and then execute reconfiguring function
+    const guess = () => {
+      let userGuess = window.prompt(`Where are we(Country Name)?\nHint: ${currentPlace[1].clue}`);
+      userGuess = userGuess.toLowerCase();
+
+      if (userGuess === country.toLowerCase()) {
+        score++;
+        alert("Correct! Current Score: " + score);
+        reconfigure();
+      } else {
+        score = 0;
+        alert(
+          "Incorrect! The correct country is " +
+          country +
+          ". Current Score: " +
+          score
+        );
+        reconfigure();
+      }
+    };
+
+
+    // Set and configure streetview 
+    function initialize() {
+      panorama = new google.maps.StreetViewPanorama(
+        document.getElementById("street-view"),
+        {
+          position: coordinates,
+          pov: { heading: 165, pitch: 0 },
+          zoom: 1,
+        }
+      )
+    }    
+  </script>
+</head>
+
+<body>
+  <!-- The guess panel on top of the street view -->
+  <div id="floating-panel">
+    <img src="mark.jpg" alt="icon" width="50px" height="50px">
+
+    <h1> If you know where you are, Guess the Country!</h1>
+    <h2 id="score"></h2>
+    <button id="start" onclick="guess()">Start / Guess</button>
+    <p></p>
+  </div>
+
+  <!-- Street view -->
+  <div id="street-view"></div>
+
+  <div id="right">
+    <button id="close">Close</button>
+    <h3>Instructions</h3>
+    <p>
+      <li> Click on "Start/Guess". An alert will appear providing you with clues about the location.</li>
+      <li>Read the clues, close the alert, and use street view for additional information about the location.</li>
+      <li>When you have an idea about the country, press "Start/Guess" again and enter your answer. Score will appear
+      </li>
+    </p>
+
+  </div>
+  <script>
+    const closeBtn = document.getElementById("close");
+    const rightDiv = document.getElementById("right");
+
+    closeBtn.addEventListener("click", function () {
+      rightDiv.style.display = "none";
+    });
+
+  </script>
+
+<footer>Designed By Akshat</footer>
+
+
+  </script>
+  <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWfibqopprSVj4Z2R7ezPuVs6DZ0rC2Oo&callback=initialize&libraries=&v=weekly"
+    async></script>
+</body>
+
+</html>
